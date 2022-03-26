@@ -22,11 +22,17 @@
 
 /*jshint node:true */
 
+const { Server } = require("socket.io");
+
 var _ = require('underscore'),
     express = require('express'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
+    io = new Server(server, {
+        cors: {
+            origin: '*'
+        }
+    }),
     socketUtil = require('./SocketUtil.js'),
     userRepository = require('./UserRepository.js'),
     instrumentRepository = require('./InstrumentRepository.js'),
@@ -54,7 +60,7 @@ console.log('Listening on port 8080');
 // -----------------------------------------------------------------------------
 
 // Log socket connections and disconnections
-io.sockets.on('connection', function(socket) {
+io.on('connection', function(socket) {
     'use strict';
     console.log(socket.id + ' connected');
 
